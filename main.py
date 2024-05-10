@@ -20,41 +20,38 @@ class TodoList:
             for indice, tarefa in enumerate(self.tarefa, start=1):
                 status = "Concluida" if tarefa.completada else "Pendente"
                 print(f"{indice}. {tarefa.nome} - {tarefa.desc} - Status {status}")
+                print("===========================================")
 
-    def marcar_concluida(self):
-        if not self.tarefa:
-            print("Sem tarefas para concluir!")
-        else: 
-            print("Escolha sua tarefa para concluir: ")
-            # percorre no indice e enumera o indince comecando de 1
-            for indice, tarefa in enumerate(self.tarefa, start=1):
-                #marca o status como concluida na variavel tarefa.completada, caso contrario marca como 'pendente'
-                status = "Concluida" if tarefa.completada else "Pendente"
-                #mostra o indice, nome e status
-                print(f"{indice}. {tarefa.nome} - {status}")
-            opcao = input("Digite o numero da tarefa: ")
-            try:
-                opcao = int(opcao)
-                # percorrer caso a opção 1 que garante que as tarefas tenham pelo menos uma tarefa pendente
-                if 1 <= opcao <= len(self.tarefas):
-                    #busca a tarefa inserida para marcar como completada (=true)
-                    self.tarefas[opcao - 1].completada = True
-                    print("Tarefa marcada como concluída!")
-                else:
-                    print("Numero da tarefa errado!")
-            # esse except é obrigatorio
-            except ValueError:
-                print("Erro: Insira um numero válido!")
+    def marcar_concluida(self, indice):        
+        if indice >= 0 and indice < len(self.tarefa):
+
+            self.tarefa[indice].completada = True
+            print("Tarefa marcada como concluída!")
+
+        else:
+            print("Numero da tarefa inválido!")
+
+    def excluir_tarefa(self, indice):
+        if indice >= 0 and indice < len(self.tarefa):
+            tarefa_exlcuida = self.tarefa.pop(indice)
+            print("Tarefa Removida: ", tarefa_exlcuida.nome)
+            print("===========================================")
+            return tarefa_exlcuida
+        else:
+            print("Não removido! Tarefa Inexistente!")
+            return None #para indicar que nenhuma tarefa foi excluida
 
 def main():
     todo_list = TodoList()
     while True:
 
+        print("---------------------------")
         print("1. Adicionar Tarefa")
         print("2. Exibir Tarefas")
         print("3. Marcar Tarefa como Concluída")
         print("4. Excluir Tarefa")
         print("5. Sair")
+        print("---------------------------")
 
         escolha = input("Escolha uma opção: ")
         
@@ -67,6 +64,18 @@ def main():
 
         elif escolha == "2":
             todo_list.exibir_tarefa()
+
+        elif escolha == "3":
+            todo_list.exibir_tarefa()
+
+            indice = int(input("Digite o número da Tarefa a ser concluída: "))
+            todo_list.marcar_concluida(indice - 1)
+        
+        elif escolha == "4":
+            todo_list.exibir_tarefa()
+
+            indice = int(input("Digite o número da Tarefa a ser excluída: "))
+            todo_list.excluir_tarefa(indice - 1)
 
         elif escolha == "5":
             break
