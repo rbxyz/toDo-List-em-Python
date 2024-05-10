@@ -1,3 +1,5 @@
+from tkinter import *
+
 class Tarefa:
     def __init__(self, nome, desc):
         self.nome = nome
@@ -6,79 +8,81 @@ class Tarefa:
 
 class TodoList:
     def __init__(self):
-        self.tarefa = []
+        self.tarefas = []
 
     def adicionar_tarefa(self, nome, desc):
         tarefa = Tarefa(nome, desc)
-        self.tarefa.append(tarefa)
+        self.tarefas.append(tarefa)
 
-    def exibir_tarefa(self):
-        if not self.tarefa:
-            print("Não tem tarefas registradas.")
+    def exibir_tarefas(self):
+        if not self.tarefas:
+            print("Não há tarefas registradas.")
         else:
             print("Tarefas: ")
-            for indice, tarefa in enumerate(self.tarefa, start=1):
-                status = "Concluida" if tarefa.completada else "Pendente"
-                print(f"{indice}. {tarefa.nome} - {tarefa.desc} - Status {status}")
+            for indice, tarefa in enumerate(self.tarefas, start=1):
+                status = "Concluída" if tarefa.completada else "Pendente"
+                print(f"{indice}. {tarefa.nome} - {tarefa.desc} - Status: {status}")
                 print("===========================================")
 
-    def marcar_concluida(self, indice):        
-        if indice >= 0 and indice < len(self.tarefa):
-
-            self.tarefa[indice].completada = True
+    def marcar_concluida(self, indice):
+        if 0 <= indice < len(self.tarefas):
+            self.tarefas[indice].completada = True
             print("Tarefa marcada como concluída!")
-
         else:
-            print("Numero da tarefa inválido!")
+            print("Número da tarefa inválido!")
 
     def excluir_tarefa(self, indice):
-        if indice >= 0 and indice < len(self.tarefa):
-            tarefa_exlcuida = self.tarefa.pop(indice)
-            print("Tarefa Removida: ", tarefa_exlcuida.nome)
+        if 0 <= indice < len(self.tarefas):
+            tarefa_excluida = self.tarefas.pop(indice)
+            print("Tarefa removida:", tarefa_excluida.nome)
             print("===========================================")
-            return tarefa_exlcuida
+            return tarefa_excluida
         else:
-            print("Não removido! Tarefa Inexistente!")
-            return None #para indicar que nenhuma tarefa foi excluida
+            print("Não removido! Tarefa inexistente!")
+            return None
+
+def adicionar_tarefa_interface(todo_list, nome_entry, desc_entry):
+    nome = nome_entry.get()
+    desc = desc_entry.get()
+    todo_list.adicionar_tarefa(nome, desc)
+    nome_entry.delete(0, END)
+    desc_entry.delete(0, END)
+
+def criar_interface_grafica(todo_list):
+    janela = Tk()
+    janela.title("To Do List")
+
+    nome_label = Label(janela, text="Nome da Tarefa:")
+    nome_label.grid(row=0, column=0, padx=10, pady=5)
+    nome_entry = Entry(janela)
+    nome_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    desc_label = Label(janela, text="Descrição da Tarefa:")
+    desc_label.grid(row=1, column=0, padx=10, pady=5)
+    desc_entry = Entry(janela)
+    desc_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    adicionar_button = Button(janela, text="Adicionar Tarefa",
+                              command=lambda: adicionar_tarefa_interface(todo_list, nome_entry, desc_entry))
+    adicionar_button.grid(row=2, columnspan=2, padx=10, pady=5)
+
+    exibir_button = Button(janela, text="Exibir Tarefas", command=todo_list.exibir_tarefas)
+    exibir_button.grid(row=3, columnspan=2, padx=10, pady=5)
+
+    marcar_button = Button(janela, text="Marcar Tarefa como Concluída", command=lambda: todo_list.marcar_concluida(0))
+    marcar_button.grid(row=4, columnspan=2, padx=10, pady=5)
+
+    excluir_button = Button(janela, text="Excluir Tarefa", command=lambda: todo_list.excluir_tarefa(0))
+    excluir_button.grid(row=5, columnspan=2, padx=10, pady=5)
+
+    sair_button = Button(janela, text="Sair", command=janela.quit)
+    sair_button.grid(row=6, columnspan=2, padx=10, pady=5)
+
+    janela.mainloop()
 
 def main():
     todo_list = TodoList()
-    while True:
-
-        print("---------------------------")
-        print("1. Adicionar Tarefa")
-        print("2. Exibir Tarefas")
-        print("3. Marcar Tarefa como Concluída")
-        print("4. Excluir Tarefa")
-        print("5. Sair")
-        print("---------------------------")
-
-        escolha = input("Escolha uma opção: ")
-        
-        if escolha == "1":
-
-            nome = input("Nome da tarefa: ")
-            desc = input("Descrição da tarefa: ")
-
-            todo_list.adicionar_tarefa(nome, desc)
-
-        elif escolha == "2":
-            todo_list.exibir_tarefa()
-
-        elif escolha == "3":
-            todo_list.exibir_tarefa()
-
-            indice = int(input("Digite o número da Tarefa a ser concluída: "))
-            todo_list.marcar_concluida(indice - 1)
-        
-        elif escolha == "4":
-            todo_list.exibir_tarefa()
-
-            indice = int(input("Digite o número da Tarefa a ser excluída: "))
-            todo_list.excluir_tarefa(indice - 1)
-
-        elif escolha == "5":
-            break
+    criar_interface_grafica(todo_list)
 
 if __name__ == "__main__":
     main()
